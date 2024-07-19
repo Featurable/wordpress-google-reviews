@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/featurable-google-reviews",
+  "version": "0.1.0",
+  "title": "Featurable Google Reviews",
+  "category": "widgets",
+  "icon": "star-half",
+  "description": "Embed beautiful & customizable Google Reviews on your website.",
+  "example": {},
+  "supports": {
+    "html": false,
+    "align": [
+      "full"
+    ],
+    "anchor": true
+  },
+  "attributes": {
+    "widgetId": {
+      "type": "string"
+    },
+    "widgetConfig": {
+      "type": "string",
+      "default": "{}"
+    },
+    "widgetLayout": {
+      "type": "string",
+      "default": "carousel"
+    }
+  },
+  "textdomain": "featurable-google-reviews",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js"
+}
