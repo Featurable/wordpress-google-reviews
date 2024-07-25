@@ -20,7 +20,7 @@ export default function save({ attributes }) {
 
 	return (
 		<div { ...useBlockProps.save() } className={`align${align}`}>
-			<script src="https://cdn.featurable.com/bundle.js" defer></script>
+			<script src="https://featurable.com/assets/bundle.js" defer></script>
 			<div id={`featurable-${widgetId}`} data-featurable-async></div>
 		</div>
 	);

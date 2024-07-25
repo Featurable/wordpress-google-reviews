@@ -62,7 +62,7 @@ function featurable_google_reviews_enqueue_scripts()
 {
 	wp_enqueue_script(
 		'featurable_google_reviews_bundle',
-		'https://cdn.featurable.com/wp-bundle.js',
+		'https://featurable.com/assets/wp-bundle.js',
 		array(),
 		'1.0.0',
 		true
@@ -76,7 +76,7 @@ function featurable_google_reviews_enqueue_scripts()
 // Add Featurable styles to the editor
 function add_featurable_editor_styles()
 {
-	add_editor_style('https://cdn.featurable.com/wp-styles.css');
+	add_editor_style('https://featurable.com/assets/wp-styles.css');
 }
 add_action('admin_init', 'add_featurable_editor_styles');
 
