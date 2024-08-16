@@ -62,7 +62,8 @@ function featurable_google_reviews_enqueue_scripts()
 {
 	wp_enqueue_script(
 		'featurable_google_reviews_bundle',
-		'https://featurable.com/assets/wp-bundle.js',
+		// 'https://featurable.com/assets/wp-bundle.js',
+		'https://featurable.com/assets/bundle.js',
 		array(),
 		'1.0.0',
 		true

@@ -121,7 +121,9 @@ export default function Edit({ attributes, setAttributes }) {
 
 	// Load widgets and accounts data
 	const loadData = async () => {
+		console.log("Loading data attempt");
 		if (!isLoggedIn) return;
+		console.log("Loading data");
 
 		setLoadingData(true);
 		try {
@@ -161,7 +163,9 @@ export default function Edit({ attributes, setAttributes }) {
 
 	// Fetch widget data from Featurable API
 	const getWidgetData = async () => {
+		console.log("Get widget data attempt", widgetId);
 		if (!widgetId) return;
+		console.log("Get widget data", widgetId);
 
 		try {
 			const response = await fetch(ajaxurl, {
@@ -201,6 +205,7 @@ export default function Edit({ attributes, setAttributes }) {
 	// Save widget data to Featurable API
 	const saveWidget = async () => {
 		if (!widgetId) return;
+		console.log("SAVING WIDGET")
 
 		try {
 			const response = await fetch(ajaxurl, {
@@ -220,7 +225,6 @@ export default function Edit({ attributes, setAttributes }) {
 			const data = await response.json();
 			if (response.ok) {
 				if (data.success) {
-					initializeWidget();
 				}
 			} else {
 				throw new Error("Failed to save widget");
@@ -240,8 +244,9 @@ export default function Edit({ attributes, setAttributes }) {
 
 	// Initialize Featurable widget using global function
 	const initializeWidget = useCallback(() => {
-		if (window.initializeFeaturableWidget) {
+		if (window && window.initializeFeaturableWidget) {
 			try {
+				console.log("Initializing widget");
 				window.initializeFeaturableWidget(
 					`featurable-${widgetId}`,
 					widgetConfig,
@@ -259,7 +264,7 @@ export default function Edit({ attributes, setAttributes }) {
 				);
 			}
 		}
-	}, [widgetId, widgetConfig, widgetLayout]);
+	}, [widgetId, widgetConfig, widgetLayout, window]);
 
 	// Handle authentication callback
 	const handleLoginCallback = async (token) => {
@@ -447,6 +452,7 @@ export default function Edit({ attributes, setAttributes }) {
 	useEffect(() => {
 		// Check authentication status
 		checkAuthStatus().then((isLoggedIn) => {
+			console.log("Auth status", isLoggedIn);
 			if (isLoggedIn) {
 				// Load user data
 				loadData();
@@ -459,11 +465,9 @@ export default function Edit({ attributes, setAttributes }) {
 			saveWidget();
 
 			const timerId = setTimeout(() => {
+				console.log("Initializing via save");
 				initializeWidget();
 			}, 0);
-
-			getWidgetData();
-			loadData();
 
 			return () => clearTimeout(timerId);
 		}
@@ -472,18 +476,11 @@ export default function Edit({ attributes, setAttributes }) {
 	useEffect(() => {
 		setAttributes({
 			widgetConfig: JSON.stringify(widgetConfig),
-		});
-
-		initializeWidget();
-	}, [widgetConfig]);
-
-	useEffect(() => {
-		setAttributes({
 			widgetLayout: widgetLayout,
 		});
 
 		initializeWidget();
-	}, [widgetLayout]);
+	}, [widgetConfig, widgetLayout]);
 
 	useEffect(() => {
 		// Re-initialize Featurable widget when widgetId changes
@@ -496,6 +493,12 @@ export default function Edit({ attributes, setAttributes }) {
 
 		return () => clearTimeout(timerId);
 	}, [widgetId]);
+
+	useEffect(() => {
+		if (isLoggedIn) {
+			loadData();
+		}
+	}, [isLoggedIn]);
 
 	useEffect(() => {
 		const handleMessage = async (event) => {
@@ -623,13 +626,19 @@ export default function Edit({ attributes, setAttributes }) {
 									<>
 										<SelectControl
 											label={__("Choose Widget", TEXT_DOMAIN)}
-											value={attributes.widgetId}
-											options={widgets.map((widget) => ({
+											value={attributes.widgetId ?? ""}
+											options={[
+												{
+													label: "Choose Widget",
+													value: "",
+													disabled: true,
+												},
+												...widgets.map((widget) => ({
 												label: `${widget.locationDisplayName} | ${capitalize(
 													widget.layout,
 												)}`,
 												value: widget.uid,
-											}))}
+											}))]}
 											onChange={(newWidgetId) => {
 												console.log(newWidgetId);
 												setAttributes({
